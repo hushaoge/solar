@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.solar.dao.RoleDAO" >
+  <resultMap id="BaseResultMap" type="com.solar.entities.mybatis.Role" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="auth_id" property="authId" jdbcType="VARCHAR" />
+    <result column="order" property="order" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <!--
+      WARNING - @mbggenerated Automatically generated on 2016-11-10.
+    -->
+    delete from tb_role
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.solar.entities.mybatis.Role" >
+    <!--
+      WARNING - @mbggenerated Automatically generated on 2016-11-10.
+    -->
+    <selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tb_role (id, role_name, auth_id, 
+      order, create_id, create_time, 
+      last_time)
+    values (#{id,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, #{authId,jdbcType=VARCHAR}, 
+      #{order,jdbcType=INTEGER}, #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.solar.entities.mybatis.Role" >
+    <!--
+      WARNING - @mbggenerated Automatically generated on 2016-11-10.
+    -->
+    update tb_role
+    set role_name = #{roleName,jdbcType=VARCHAR},
+      auth_id = #{authId,jdbcType=VARCHAR},
+      order = #{order,jdbcType=INTEGER},
+      create_id = #{createId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_time = #{lastTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!--
+      WARNING - @mbggenerated Automatically generated on 2016-11-10.
+    -->
+    select id, role_name, auth_id, order, create_id, create_time, last_time
+    from tb_role
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    <!--
+      WARNING - @mbggenerated Automatically generated on 2016-11-10.
+    -->
+    select id, role_name, auth_id, order, create_id, create_time, last_time
+    from tb_role
+  </select>
+</mapper>

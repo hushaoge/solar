@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.solar.dao.UserInfoDAO" >
+  <resultMap id="BaseResultMap" type="com.solar.entities.mybatis.UserInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="passwd" property="passwd" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+
+    delete from tb_user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.solar.entities.mybatis.UserInfo" >
+    <!--
+      WARNING - @mbggenerated Automatically generated on 2016-11-10.
+    -->
+    insert into tb_user (id, user_name, passwd, 
+      nick_name, age, sex, 
+      role_id, create_time, last_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{passwd,jdbcType=VARCHAR}, 
+      #{nickName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, 
+      #{roleId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{lastTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.solar.entities.mybatis.UserInfo" >
+    update tb_user
+    SET user_name = #{userName,jdbcType=VARCHAR},
+      passwd = #{passwd,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=VARCHAR},
+      role_id = #{roleId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_time = #{lastTime,jdbcType=TIMESTAMP}
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT id, user_name, passwd, nick_name, age, sex, role_id, create_time, last_time
+    FROM tb_user
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    SELECT id, user_name, passwd, nick_name, age, sex, role_id, create_time, last_time
+    FROM tb_user
+  </select>
+  <select id="queryAll" resultMap="BaseResultMap" >
+    SELECT id, user_name, passwd, nick_name, age, sex, role_id, create_time, last_time
+    FROM tb_user
+  </select>
+
+</mapper>
