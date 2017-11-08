@@ -14,6 +14,9 @@
     <!--datasource -->
     <import resource="/spring/spring-datasource.xml"/>
 
+    <!-- shiro -->
+    <import resource="/shiro/application-shiro.xml" />
+
     <!-- dubbo 暂时不起用-->
     <!--<import resource="/dubbo/dubbo-server.xml"/>-->
     <!--<import resource="/dubbo/dubbo-client.xml"/>-->

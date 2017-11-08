@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <description>Shiro Configuration</description>
+    <!-- 安全认证过滤器 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- Shiro的核心安全接口，这个属性是必须的 -->
+        <property name="securityManager" ref="securityManager"></property>
+        <!-- 要求登录时的请求地址 -->
+        <property name="loginUrl" value="/login"></property>
+        <!-- 登录成功后要跳转的连接(本例中此属性用不到，因为登录成功后的处理逻辑在LoginController里硬编码) -->
+        <!-- <property name="successUrl" value="/" ></property> -->
+        <!-- 用户访问未对其授权的资源时，所显示的连接 -->
+        <property name="unauthorizedUrl" value="/"></property>
+        <property name="filters">
+            <map>
+                <!-- 注锁账号认证信息 -->
+                <!--<entry key="logoutFilter" value-ref="logoutFilter"/>-->
+                <entry key="authc" value-ref="formAuthenticationFilter"/>
+            </map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                /tologin     = anon
+                /login       = authc
+                /logout      = anon
+                /favicon.ico = anon
+                /static/**   = anon
+                /error       = anon
+                /theatre/**  = anon
+                /unauthorize = anon
+                <!--/api-docs/** = perms[apiDocs:view]-->
+                /** = authc
+            </value>
+        </property>
+    </bean>
+
+
+    <!-- 注销单点登录认证凭证信息，浏览器关闭后下次访问需要重新认证-->
+    <!--<bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">-->
+        <!--&lt;!&ndash; 配置注销请求地址,仔细说明见后面 &ndash;&gt;-->
+        <!--<property name="redirectUrl" value="${shiro.serverUrlPrefix}/logout?service=${base.url}${shiro.successUrl}"/>-->
+    <!--</bean>-->
+
+    <!--扩展表单认证过滤器-->
+    <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter"/>
+
+    <!-- Realm实现，自定义登录等相当业务逻辑处理类-->
+    <bean id="shiroRealm" class="com.solar.security.shiro.realm.SystemAuthorizingRealm">
+    </bean>
+
+    <!-- 权限管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 基于redis登录校验的实现 -->
+        <property name="realm" ref="shiroRealm"/>
+        <!-- session 管理器 -->
+        <!--<property name="sessionManager" ref="sessionManager"/>-->
+        <property name="cacheManager" ref="cacheManager"/>
+    </bean>
+
+    <!--开启Shiro的注解 (如@RequiresRoles，@RequiresPermissions)，
+        需借助SpringAOP扫描使用Shiro注解的类，并在必要时进行安全逻辑验证  -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+
+    <!-- session管理器 -->
+    <!--<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">-->
+        <!--<property name="sessionDAO" ref="redisSessionDAO"/>-->
+        <!--<property name="sessionIdCookie" ref="sessionIdCookie"/>-->
+    <!--</bean>-->
+
+    <!-- 会话Cookie行业应用 -->
+    <!--<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">-->
+        <!--<constructor-arg value="${shiro.cookie.sessionId}"/>-->
+        <!--<property name="httpOnly" value="true"/>-->
+        <!--&lt;!&ndash;默认关闭浏览器过期，所以下面一行被注释&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="maxAge" value="180000"/>&ndash;&gt;-->
+        <!--<property name="domain" value="${shiro.cookie.domain}"/>-->
+    <!--</bean>-->
+
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- 数据库保存的密码是使用MD5算法加密的，所以这里需要配置一个密码匹配对象 -->
+    <!--<bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher"></bean>-->
+
+    <!-- 缓存管理 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"></property>
+        <property name="arguments" ref="securityManager"></property>
+    </bean>
+
+</beans>
