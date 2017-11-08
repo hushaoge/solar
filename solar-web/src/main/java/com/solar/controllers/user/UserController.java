@@ -28,7 +28,7 @@ public class UserController {
     @Autowired
     private Mapper dozerMapper;
 
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listUser(Model model){
         List<UserInfo> list =userInfoService.selectAll();
         model.addAttribute("list",list);
