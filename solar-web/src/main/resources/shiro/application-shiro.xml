@@ -33,7 +33,8 @@
                 /theatre/**  = anon
                 /unauthorize = anon
                 <!--/api-docs/** = perms[apiDocs:view]-->
-                /** = authc
+                <!--/** = authc-->
+                /** = anon
             </value>
         </property>
     </bean>
